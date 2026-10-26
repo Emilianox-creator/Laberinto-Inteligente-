@@ -31,3 +31,31 @@ Renderer: muestra el laberinto y los elementos del juego en pantalla.
 * **Carlo Ramses Morales Martinez**
 
 ---
+
+
+## Instalación y compilación
+
+### Requisitos
+
+- **CMake 3.28 o mayor** (SFML 3.1.0 lo exige). Descarga la última versión para tu sistema operativo desde https://cmake.org/download/.
+- Un compilador con soporte para **C++17**.
+- **Git**, porque CMake lo usa para descargar SFML.
+
+### SFML
+
+- Versión usada: **SFML 3.1.0** (fijada con `GIT_TAG` en `CMakeLists.txt`).
+- **No hay que instalarla a mano**: CMake la descarga y la compila automáticamente con `FetchContent` la primera vez que se configura el proyecto.
+- Ojo: muchos tutoriales en internet son de SFML 2 y su código no compila en SFML 3. Guía de migración: https://www.sfml-dev.org/tutorials/3.0/getting-started/migrate/
+
+### Compilar y ejecutar
+
+Desde la raíz del repositorio:
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+La primera configuración tarda más porque descarga y compila SFML.
+
+El ejecutable queda en `build/laberinto` (en Windows, `build/laberinto.exe`, o `build/Debug/laberinto.exe` si usas Visual Studio).
