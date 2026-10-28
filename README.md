@@ -47,15 +47,41 @@ Renderer: muestra el laberinto y los elementos del juego en pantalla.
 - **No hay que instalarla a mano**: CMake la descarga y la compila automáticamente con `FetchContent` la primera vez que se configura el proyecto.
 - Ojo: muchos tutoriales en internet son de SFML 2 y su código no compila en SFML 3. Guía de migración: https://www.sfml-dev.org/tutorials/3.0/getting-started/migrate/
 
-### Compilar y ejecutar
+### Compilar y ejecutar (todos los sistemas)
 
 Desde la raíz del repositorio:
 
 ```bash
-cmake -S . -B build
-cmake --build build
+cmake -S . -B build      # 1. Configurar (solo la primera vez o si cambia CMakeLists.txt)
+cmake --build build      # 2. Compilar (cada vez que cambies el código)
+./build/laberinto        # 3. Ejecutar (macOS y Linux)
 ```
 
-La primera configuración tarda más porque descarga y compila SFML.
-
 El ejecutable queda en `build/laberinto` (en Windows, `build/laberinto.exe`, o `build/Debug/laberinto.exe` si usas Visual Studio).
+
+**La primera configuración tarda varios minutos**: SFML y sus dependencias (freetype, harfbuzz, etc.) pesan más de 400 MB. No está congelado, está descargando. Para ver el progreso:
+
+```bash
+cmake -S . -B build -DFETCHCONTENT_QUIET=OFF
+```
+
+**Usa siempre la misma carpeta de build.** Cada carpeta nueva (`-B otra-carpeta`) vuelve a descargar todo desde cero. El nombre `build` es solo una convención. Si en tu computadora ya configuraste otra carpeta (por ejemplo, la extensión CMake Tools de VS Code puede usar `build-mac` según tu `.vscode/settings.json`), usa esa en los tres comandos.
+
+### Solo macOS: VS Code no encuentra CMake
+
+Esto aplica a quien tenga Mac y vea en VS Code el error:
+
+```
+Ejecutable de CMake incorrecto: "". Compruebe que está instalado o que el valor de la configuración de "cmake.cmakePath" contiene la ruta de acceso correcta.
+```
+
+**Por qué pasa:** las apps abiertas desde el Dock o Spotlight no leen `~/.zshrc`. Si agregaste CMake al `PATH` solo ahí, la terminal lo encuentra, pero VS Code no.
+
+**Solución (una de estas):**
+
+- Agrega a tu `.vscode/settings.json` la ruta de tu CMake. Si lo instalaste desde el `.dmg` de cmake.org:
+  ```json
+  "cmake.cmakePath": "/Applications/CMake.app/Contents/bin/cmake"
+  ```
+  Para saber tu ruta, ejecuta `which cmake` en la terminal. La carpeta `.vscode/` está en `.gitignore`, así que este ajuste es personal y no se sube al repositorio.
+- O abre VS Code desde la terminal con `code .` para que herede tu `PATH`.
