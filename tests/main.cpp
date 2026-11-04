@@ -7,6 +7,8 @@
 void ejecutarPruebasMaze();
 void ejecutarPruebasDFS();
 void ejecutarPruebasMazeGenerator();
+void ejecutarPruebasPlayer();
+void ejecutarPruebasGameState();
 
 int main()
 {
@@ -16,6 +18,10 @@ int main()
     ejecutarPruebasDFS();
     std::cout << "Probando MazeGenerator...\n";
     ejecutarPruebasMazeGenerator();
+    std::cout << "Probando Player, HumanPlayer y AIPlayer...\n";
+    ejecutarPruebasPlayer();
+    std::cout << "Probando GameState...\n";
+    ejecutarPruebasGameState();
 
     std::cout << pruebas::totalVerificaciones << " verificaciones, " << pruebas::totalFallas
               << " fallas\n";

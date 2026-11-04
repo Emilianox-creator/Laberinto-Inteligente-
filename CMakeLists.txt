@@ -31,6 +31,10 @@ add_library(laberinto_modelo STATIC
   src/model/Maze.cpp
   src/model/DFS.cpp
   src/model/MazeGenerator.cpp
+  src/model/Player.cpp
+  src/model/HumanPlayer.cpp
+  src/model/AIPlayer.cpp
+  src/model/GameState.cpp
 )
 target_include_directories(laberinto_modelo PUBLIC include)
 target_compile_options(laberinto_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
@@ -47,6 +51,8 @@ add_executable(pruebas_modelo
   tests/MazeTests.cpp
   tests/DFSTests.cpp
   tests/MazeGeneratorTests.cpp
+  tests/PlayerTests.cpp
+  tests/GameStateTests.cpp
 )
 target_link_libraries(pruebas_modelo PRIVATE laberinto_modelo)
 target_compile_options(pruebas_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
