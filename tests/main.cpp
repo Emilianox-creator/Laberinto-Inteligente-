@@ -5,11 +5,14 @@
 
 // Cada archivo *Tests.cpp define una de estas funciones.
 void ejecutarPruebasMaze();
+void ejecutarPruebasDFS();
 
 int main()
 {
     std::cout << "Probando Maze...\n";
     ejecutarPruebasMaze();
+    std::cout << "Probando DFS...\n";
+    ejecutarPruebasDFS();
 
     std::cout << pruebas::totalVerificaciones << " verificaciones, " << pruebas::totalFallas
               << " fallas\n";
