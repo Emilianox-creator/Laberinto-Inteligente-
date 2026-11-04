@@ -19,7 +19,9 @@ FetchContent_MakeAvailable(SFML)
 
 # Advertencias del compilador para nuestro código (no para el de SFML).
 if(MSVC)
-  set(OPCIONES_ADVERTENCIAS /W4)
+  # /utf-8: MSVC lee los .cpp con la codificación de Windows si no se le
+  # indica, y los textos con acentos del juego se verían mal.
+  set(OPCIONES_ADVERTENCIAS /W4 /utf-8)
 else()
   set(OPCIONES_ADVERTENCIAS -Wall -Wextra -Wpedantic)
 endif()
@@ -40,9 +42,16 @@ target_include_directories(laberinto_modelo PUBLIC include)
 target_compile_options(laberinto_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
 
 # El juego: View + Controller, que sí usan SFML.
-add_executable(laberinto src/main.cpp)
+add_executable(laberinto
+  src/main.cpp
+  src/controller/Game.cpp
+  src/view/Renderer.cpp
+)
 target_link_libraries(laberinto PRIVATE laberinto_modelo SFML::Graphics SFML::Window SFML::System)
 target_compile_options(laberinto PRIVATE ${OPCIONES_ADVERTENCIAS})
+# Ruta absoluta a assets/, para que el juego encuentre la fuente aunque se
+# ejecute desde la carpeta de build (por ejemplo, desde VS Code).
+target_compile_definitions(laberinto PRIVATE LABERINTO_DIR_ASSETS="${PROJECT_SOURCE_DIR}/assets")
 
 # Pruebas del modelo. Se corren con: ctest --test-dir build --output-on-failure
 enable_testing()
