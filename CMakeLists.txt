@@ -30,6 +30,7 @@ endif()
 add_library(laberinto_modelo STATIC
   src/model/Maze.cpp
   src/model/DFS.cpp
+  src/model/MazeGenerator.cpp
 )
 target_include_directories(laberinto_modelo PUBLIC include)
 target_compile_options(laberinto_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
@@ -45,6 +46,7 @@ add_executable(pruebas_modelo
   tests/main.cpp
   tests/MazeTests.cpp
   tests/DFSTests.cpp
+  tests/MazeGeneratorTests.cpp
 )
 target_link_libraries(pruebas_modelo PRIVATE laberinto_modelo)
 target_compile_options(pruebas_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
