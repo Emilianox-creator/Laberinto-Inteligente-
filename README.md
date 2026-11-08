@@ -23,6 +23,35 @@ GameState: guarda el estado actual de la partida.
 Renderer: muestra el laberinto y los elementos del juego en pantalla.
 
 
+## Cómo jugar
+
+En el menú elige un modo con las teclas **1**, **2** o **3**:
+
+| Modo | Jugador 1 | Jugador 2 |
+|---|---|---|
+| 1 · Máquina vs Máquina | IA Roja | IA Azul |
+| 2 · Máquina vs Usuario | Tú, con las flechas | IA |
+| 3 · Usuario vs Usuario | Flechas | W A S D |
+
+- Todos salen de la esquina superior izquierda y gana quien llegue primero a la salida (la celda dorada, abajo a la derecha). Si llegan en el mismo turno, es empate.
+- Cada laberinto es nuevo: se genera con DFS aleatorio, y es "perfecto" porque entre dos celdas cualesquiera hay un único camino.
+- La IA resuelve el laberinto con DFS paso a paso (un paso cada 0.1 s). En el laberinto se ve su camino actual y en el minimapa de abajo, todas las celdas que ha explorado.
+- **Esc** regresa al menú (y en el menú cierra el juego). Al terminar, **R** juega otra vez el mismo modo y **Enter** vuelve al menú.
+
+## Estructura del proyecto
+
+```
+include/            headers de todas las clases (un archivo por clase o tipo)
+src/model/          Model: lógica pura, sin SFML (se compila como la biblioteca laberinto_modelo)
+src/view/           View: Renderer, dibuja con SFML
+src/controller/     Controller: Game, el game loop y el teclado
+tests/              pruebas del modelo (CTest)
+assets/fonts/       fuente Tuffy, de dominio público (viene de los ejemplos de SFML)
+docs/ClasesUML.drawio   diagrama de clases
+```
+
+El modelo se compila sin enlazarse con SFML, así que los headers de SFML no están disponibles en `src/model/`. Esto ayuda a cumplir la regla del diagrama: solo `Game` y `Renderer` conocen SFML.
+
 ## Integrantes
 
 * **Ivan Emiliano Urzua Loera**
@@ -58,6 +87,17 @@ cmake --build build      # 2. Compilar (cada vez que cambies el código)
 ```
 
 El ejecutable queda en `build/laberinto` (en Windows, `build/laberinto.exe`, o `build/Debug/laberinto.exe` si usas Visual Studio).
+
+El juego busca la fuente en `assets/fonts/tuffy.ttf`, primero desde la carpeta donde lo ejecutas y luego en la carpeta `assets` del repositorio, cuya ruta pone CMake al compilar.
+
+### Correr las pruebas
+
+Las pruebas revisan el modelo (Maze, MazeGenerator, DFS, jugadores y GameState) sin abrir ventanas:
+
+```bash
+cmake --build build                          # compila también el ejecutable pruebas_modelo
+ctest --test-dir build --output-on-failure   # en Visual Studio agrega: -C Debug
+```
 
 **La primera configuración tarda varios minutos**: SFML y sus dependencias (freetype, harfbuzz, etc.) pesan más de 400 MB. No está congelado, está descargando. Para ver el progreso:
 

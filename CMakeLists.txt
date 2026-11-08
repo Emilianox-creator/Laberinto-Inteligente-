@@ -1,9 +1,12 @@
-cmake_minimum_required(VERSION 3.10)
-project(LaberintoInteligente)
+cmake_minimum_required(VERSION 3.28) # SFML 3.1.0 exige CMake 3.28 o mayor
+project(LaberintoInteligente LANGUAGES CXX)
 
 # Fijar el estándar en C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Sin extensiones propias del compilador, para que el código sea C++ estándar
+# y compile igual en clang (Mac), gcc (Linux) y MSVC (Windows).
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -14,12 +17,52 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
+# Advertencias del compilador para nuestro código (no para el de SFML).
+if(MSVC)
+  # /utf-8: MSVC lee los .cpp con la codificación de Windows si no se le
+  # indica, y los textos con acentos del juego se verían mal.
+  set(OPCIONES_ADVERTENCIAS /W4 /utf-8)
+else()
+  set(OPCIONES_ADVERTENCIAS -Wall -Wextra -Wpedantic)
+endif()
 
-# Crear el ejecutable apuntando a src/main.cpp
-add_executable(laberinto src/main.cpp)
+# Model: la lógica del juego como biblioteca aparte que NO se enlaza con SFML.
+# Así los headers de SFML no están disponibles en el modelo y CMake ayuda a
+# cumplir la regla del UML. También permite probar el modelo sin abrir ventanas.
+add_library(laberinto_modelo STATIC
+  src/model/Maze.cpp
+  src/model/DFS.cpp
+  src/model/MazeGenerator.cpp
+  src/model/Player.cpp
+  src/model/HumanPlayer.cpp
+  src/model/AIPlayer.cpp
+  src/model/GameState.cpp
+)
+target_include_directories(laberinto_modelo PUBLIC include)
+target_compile_options(laberinto_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
 
-# Agregar la carpeta include/ como directorio de headers
-target_include_directories(laberinto PRIVATE include)
-target_link_libraries(laberinto PRIVATE SFML::Graphics SFML::Window SFML::System)
+# El juego: View + Controller, que sí usan SFML.
+add_executable(laberinto
+  src/main.cpp
+  src/controller/Game.cpp
+  src/view/Renderer.cpp
+)
+target_link_libraries(laberinto PRIVATE laberinto_modelo SFML::Graphics SFML::Window SFML::System)
+target_compile_options(laberinto PRIVATE ${OPCIONES_ADVERTENCIAS})
+# Ruta absoluta a assets/, para que el juego encuentre la fuente aunque se
+# ejecute desde la carpeta de build (por ejemplo, desde VS Code).
+target_compile_definitions(laberinto PRIVATE LABERINTO_DIR_ASSETS="${PROJECT_SOURCE_DIR}/assets")
 
-
+# Pruebas del modelo. Se corren con: ctest --test-dir build --output-on-failure
+enable_testing()
+add_executable(pruebas_modelo
+  tests/main.cpp
+  tests/MazeTests.cpp
+  tests/DFSTests.cpp
+  tests/MazeGeneratorTests.cpp
+  tests/PlayerTests.cpp
+  tests/GameStateTests.cpp
+)
+target_link_libraries(pruebas_modelo PRIVATE laberinto_modelo)
+target_compile_options(pruebas_modelo PRIVATE ${OPCIONES_ADVERTENCIAS})
+add_test(NAME pruebas_modelo COMMAND pruebas_modelo)
