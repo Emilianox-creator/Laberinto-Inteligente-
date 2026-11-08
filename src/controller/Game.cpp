@@ -18,7 +18,7 @@ constexpr int ANCHO_LABERINTO = 25;
 constexpr int ALTO_LABERINTO = 17;
 
 // Las IA dan un paso cada este tiempo, sin importar los FPS.
-constexpr float SEGUNDOS_POR_PASO_IA = 0.1f;
+constexpr float SEGUNDOS_POR_PASO_IA = 0.25f;
 
 // Si la ventana se congela (por ejemplo, al arrastrarla), el siguiente dt
 // sería enorme y las IA darían muchos pasos de golpe. Se limita a esto.

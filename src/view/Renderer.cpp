@@ -46,7 +46,7 @@ sf::Color conTransparencia(sf::Color color, std::uint8_t alfa)
 sf::Color mezclar(sf::Color a, sf::Color b)
 {
     return sf::Color(static_cast<std::uint8_t>((a.r + b.r) / 2), static_cast<std::uint8_t>((a.g + b.g) / 2),
-                     static_cast<std::uint8_t>((a.b + b.b) / 2));
+                    static_cast<std::uint8_t>((a.b + b.b) / 2));
 }
 
 std::string formatearSegundos(float segundos)
@@ -75,7 +75,7 @@ sf::Font cargarFuente()
         }
     }
     throw std::runtime_error("No se pudo cargar la fuente " + rutaRelativa.string() +
-                             ". Revisa que exista la carpeta assets del repositorio.");
+                            ". Revisa que exista la carpeta assets del repositorio.");
 }
 
 int contarExploradas(const DFS& busqueda, const Maze& laberinto)
@@ -107,13 +107,13 @@ std::string resumenDeJugador(const Player& jugador, const Maze& laberinto)
 
 Renderer::Renderer(int ancho, int alto)
     : anchoCeldas(ancho), altoCeldas(alto), tamanoCelda(TAMANO_CELDA), alturaMinimapa(ALTURA_MINIMAPA),
-      fuente(cargarFuente()),
+        fuente(cargarFuente()),
       // Aquí ya se pueden usar anchoCeldas, tamanoCelda, etc., porque están
       // declarados antes que ventana en Renderer.h.
       ventana(sf::VideoMode({static_cast<unsigned int>(anchoCeldas * tamanoCelda + 2 * MARGEN_LABERINTO),
-                             static_cast<unsigned int>(altoCeldas * tamanoCelda + 2 * MARGEN_LABERINTO +
-                                                       alturaMinimapa)}),
-              "Laberinto Inteligente", sf::Style::Titlebar | sf::Style::Close)
+                            static_cast<unsigned int>(altoCeldas * tamanoCelda + 2 * MARGEN_LABERINTO +
+                                                    alturaMinimapa)}),
+            "Laberinto Inteligente", sf::Style::Titlebar | sf::Style::Close)
 {
     ventana.setFramerateLimit(LIMITE_FPS);
 }
@@ -164,9 +164,9 @@ void Renderer::dibujarMenu()
     dibujarTexto("3  ·  Usuario vs Usuario", 28, {centro, arriba + 240}, colorDeJugador(1), true);
 
     dibujarTexto("Jugador 1: flechas      Jugador 2: W A S D", 18, {centro, arriba + 330}, COLOR_TEXTO_SUAVE,
-                 true);
+                true);
     dibujarTexto("La IA resuelve el laberinto con búsqueda en profundidad (DFS)", 16, {centro, arriba + 365},
-                 COLOR_TEXTO_SUAVE, true);
+                COLOR_TEXTO_SUAVE, true);
     dibujarTexto("Esc: salir", 16, {centro, arriba + 420}, COLOR_TEXTO_SUAVE, true);
 }
 
@@ -241,7 +241,7 @@ void Renderer::dibujarLaberinto(const GameState& estado)
     for (int indice = 0; indice < estado.getNumJugadores(); ++indice)
     {
         sf::Vector2f centro = esquinaDeCelda(estado.getJugador(indice).getPosicion()) +
-                              sf::Vector2f(celda / 2.0f, celda / 2.0f);
+                            sf::Vector2f(celda / 2.0f, celda / 2.0f);
         if (compartenCelda)
         {
             // Separarlos un poco para que no se tapen al estar en la misma celda.
@@ -330,12 +330,12 @@ void Renderer::dibujarMinimapa(const GameState& estado)
     for (int indice = 0; indice < estado.getNumJugadores(); ++indice)
     {
         dibujarTexto(resumenDeJugador(estado.getJugador(indice), laberinto), 18, {columnaTexto, renglon},
-                     colorDeJugador(indice));
+                    colorDeJugador(indice));
         renglon += 26.0f;
     }
 
     dibujarTexto("Esc: volver al menú", 14, {columnaTexto, arriba + static_cast<float>(alturaMinimapa) - 26.0f},
-                 COLOR_TEXTO_SUAVE);
+                COLOR_TEXTO_SUAVE);
 }
 
 void Renderer::dibujarResultados(const GameState& estado)
@@ -364,13 +364,13 @@ void Renderer::dibujarResultados(const GameState& estado)
     for (int indice = 0; indice < estado.getNumJugadores(); ++indice)
     {
         dibujarTexto(resumenDeJugador(estado.getJugador(indice), estado.getLaberinto()), 20, {centro, renglon},
-                     colorDeJugador(indice), true);
+                    colorDeJugador(indice), true);
         renglon += 30.0f;
     }
 
     renglon += 30.0f;
     dibujarTexto("R: jugar otra vez     ·     Enter o Esc: volver al menú", 18, {centro, renglon},
-                 COLOR_TEXTO_SUAVE, true);
+                COLOR_TEXTO_SUAVE, true);
 }
 
 void Renderer::dibujarTexto(const std::string& texto, unsigned int tamano, sf::Vector2f posicion, sf::Color color,
